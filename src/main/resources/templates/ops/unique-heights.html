@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Уникальные высоты</title></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<h2>Уникальные высоты</h2>
+<p th:each="h: ${heights}" th:text="${h}"></p>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

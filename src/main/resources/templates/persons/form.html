@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${person != null && person.id != null ? 'Изменить' : 'Создать'}">Форма</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<h2 th:text="${person != null && person.id != null ? 'Изменить' : 'Создать'}"></h2>
+
+<form th:action="${person == null || person.id == null} ? @{/persons} : @{'/persons/' + ${person.id}}"
+      method="post" th:object="${person}">
+
+  <div class="error" th:if="${#fields.hasErrors('*')}">
+    <ul>
+      <li th:each="e : ${#fields.errors('*')}" th:text="${e}"></li>
+    </ul>
+  </div>
+
+  <div class="field">
+    <label>name</label>
+    <input type="text" th:field="*{name}" required/>
+  </div>
+
+  <div class="field">
+    <label>height (&gt;0)</label>
+    <input type="number" th:field="*{height}" min="1" required/>
+  </div>
+
+  <div class="field">
+    <label>birthday (опционально)</label>
+    <input type="date" th:field="*{birthday}"/>
+  </div>
+
+  <div class="field">
+    <label>eyeColor</label>
+    <select th:field="*{eyeColor}">
+      <option th:each="c : ${colors}" th:value="${c}" th:text="${c}"></option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>hairColor</label>
+    <select th:field="*{hairColor}">
+      <option th:each="c : ${colors}" th:value="${c}" th:text="${c}"></option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>nationality</label>
+    <select th:field="*{nationality}">
+      <option th:each="n : ${countries}" th:value="${n}" th:text="${n}"></option>
+    </select>
+  </div>
+
+  <fieldset>
+    <legend>Coordinates (обязательно)</legend>
+    <div class="field">
+      <label>x (float)</label>
+      <input type="number" step="0.01" th:field="*{coordinates.x}" required/>
+    </div>
+    <div class="field">
+      <label>y (Float, not null)</label>
+      <input type="number" step="0.01" th:field="*{coordinates.y}" required/>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Location (опционально)</legend>
+    <div class="field">
+      <label>x (Double)</label>
+      <input type="number" step="0.01" th:field="*{location.x}"/>
+    </div>
+    <div class="field">
+      <label>y (int)</label>
+      <input type="number" th:field="*{location.y}"/>
+    </div>
+    <div class="field">
+      <label>z (int)</label>
+      <input type="number" th:field="*{location.z}"/>
+    </div>
+  </fieldset>
+
+  <button type="submit">Сохранить</button>
+  <a th:href="@{/persons}">Отмена</a>
+</form>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

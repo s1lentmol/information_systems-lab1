@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+</head>
+<body>
+<!-- навигация -->
+<nav class="nav" th:fragment="nav">
+  <div class="nav-inner">
+    <a th:href="@{/persons}">Список</a>
+    <a th:href="@{/persons/new}">Создать</a>
+    <a th:href="@{/ops}">Операции</a>
+  </div>
+</nav>
+
+<!-- websocket-скрипты -->
+<div th:fragment="ws">
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  <script>
+    const sock = new SockJS('/ws');
+    const stomp = Stomp.over(sock);
+    stomp.connect({}, () => {
+      stomp.subscribe('/topic/persons', () => location.reload());
+    });
+  </script>
+</div>
+</body>
+</html>

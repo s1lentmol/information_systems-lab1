@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Операции</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<h2>Операции</h2>
+
+<h3>Удалить всех по nationality</h3>
+<form method="post" th:action="@{/ops/delete-by-nationality}">
+  <select name="nationality">
+    <option th:each="n: ${countries}" th:value="${n}" th:text="${n}"></option>
+  </select>
+  <button type="submit">Удалить</button>
+</form>
+
+<h3>Люди с height &gt; X</h3>
+<form method="get" th:action="@{/ops/height-greater}">
+  <input type="number" name="height" min="1" value="170"/>
+  <button type="submit">Найти</button>
+</form>
+
+<h3>Уникальные значения height</h3>
+<a th:href="@{/ops/unique-heights}">Показать</a>
+
+<h3>Доля людей с цветом волос</h3>
+<form method="get" th:action="@{/ops/hair-share}">
+  <select name="hairColor">
+    <option th:each="c : ${colors}" th:value="${c}" th:text="${c}"></option>
+  </select>
+  <button type="submit">Посчитать (%)</button>
+</form>
+
+<h3>Количество людей с цветом волос в локации</h3>
+<form method="get" th:action="@{/ops/hair-count-in-location}">
+  <select name="hairColor">
+    <option th:each="c : ${colors}" th:value="${c}" th:text="${c}"></option>
+  </select>
+  <input type="number" name="locationId" placeholder="locationId (опционально)"/>
+  <button type="submit">Посчитать</button>
+</form>
+
+<div th:if="${message}" class="ok" th:text="${message}"></div>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

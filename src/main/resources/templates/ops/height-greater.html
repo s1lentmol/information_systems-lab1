@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Результаты</title></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<h2>Результаты</h2>
+<table>
+  <tr><th>ID</th><th>Name</th><th>Height</th></tr>
+  <tr th:each="p: ${results}">
+    <td th:text="${p.id}"></td>
+    <td th:text="${p.name}"></td>
+    <td th:text="${p.height}"></td>
+  </tr>
+</table>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

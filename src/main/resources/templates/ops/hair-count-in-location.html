@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Количество по цвету волос</title></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<h2>Количество по цвету волос в локации</h2>
+<p>hairColor: <span th:text="${hairColor}"></span>,
+  locationId: <span th:text="${locationId}"></span></p>
+<p>count: <b th:text="${count}"></b></p>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

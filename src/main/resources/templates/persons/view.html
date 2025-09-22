@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><title>Просмотр</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<h2>Просмотр</h2>
+<div th:if="${error}" class="error" th:text="${error}"></div>
+<div th:if="${person}">
+  <p><b>ID:</b> <span th:text="${person.id}"></span></p>
+  <p><b>name:</b> <span th:text="${person.name}"></span></p>
+  <p><b>height:</b> <span th:text="${person.height}"></span></p>
+  <p><b>eyeColor:</b> <span th:text="${person.eyeColor}"></span></p>
+  <p><b>hairColor:</b> <span th:text="${person.hairColor}"></span></p>
+  <p><b>nationality:</b> <span th:text="${person.nationality}"></span></p>
+  <p><b>birthday:</b> <span th:text="${person.birthday != null ? #dates.format(person.birthday,'yyyy-MM-dd') : ''}"></span></p>
+  <p><b>creationDate:</b> <span th:text="${person.creationDate != null ? #temporals.format(person.creationDate,'yyyy-MM-dd HH:mm') : ''}"></span></p>
+  <p><b>coordinates:</b>
+    <span th:text="${person.coordinates != null ? ('x=' + person.coordinates.x + '; y=' + person.coordinates.y) : ''}"></span>
+  </p>
+  <p><b>location:</b>
+    <span th:text="${person.location != null ? ('x=' + person.location.x + '; y=' + person.location.y + '; z=' + person.location.z) : '(нет)'}"></span>
+  </p>
+  <a th:href="@{|/persons/${person.id}/edit|}">Изменить</a>
+</div>
+
+<div th:replace="fragments/nav :: ws"></div>
+</body>
+</html>
