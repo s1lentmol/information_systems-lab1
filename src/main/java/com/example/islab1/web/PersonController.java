@@ -23,6 +23,17 @@ public class PersonController {
         this.publisher = publisher;
     }
 
+    /**
+     * Общие справочники (цвета, страны) для форм.
+     */
+    private void populateReferenceData(Model model) {
+        model.addAttribute("colors", Color.values());
+        model.addAttribute("countries", Country.values());
+    }
+
+    /**
+     * Список с пагинацией, фильтрами и сортировкой.
+     */
     @GetMapping
     public String list(@RequestParam(required = false) String filterField,
                        @RequestParam(required = false) String filterValue,
@@ -46,8 +57,7 @@ public class PersonController {
         model.addAttribute("filterValue", filterValue);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
-        model.addAttribute("colors", Color.values());
-        model.addAttribute("countries", Country.values());
+        populateReferenceData(model);
         return "persons/list";
     }
 
@@ -56,18 +66,19 @@ public class PersonController {
         Person p = new Person();
         p.setCoordinates(new Coordinates());
         model.addAttribute("person", p);
-        model.addAttribute("colors", Color.values());
-        model.addAttribute("countries", Country.values());
+        populateReferenceData(model);
         return "persons/form";
     }
 
+    /**
+     * Обработка отправки формы создания.
+     */
     @PostMapping
     public String create(@Valid @ModelAttribute("person") Person person,
                          BindingResult bindingResult,
                          Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("colors", Color.values());
-            model.addAttribute("countries", Country.values());
+            populateReferenceData(model);
             return "persons/form";
         }
         try {
@@ -76,45 +87,42 @@ public class PersonController {
             return "redirect:/persons";
         } catch (Exception ex) {
             bindingResult.reject("createError", ex.getMessage());
-            model.addAttribute("colors", Color.values());
-            model.addAttribute("countries", Country.values());
+            populateReferenceData(model);
             return "persons/form";
         }
     }
 
     @GetMapping("/{id}")
     public String view(@PathVariable Integer id, Model model) {
-        Person p = service.get(id).orElse(null);
-        if (p == null) {
-            model.addAttribute("error", "Person not found");
-            return "persons/view";
-        }
+        Person p = service.require(id);
         model.addAttribute("person", p);
         return "persons/view";
     }
 
+    /**
+     * Форма редактирования уже существующего пользователя.
+     */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model) {
-        Person p = service.get(id).orElse(null);
-        if (p == null) {
-            model.addAttribute("error", "Person not found");
-            return "persons/view";
+        Person p = service.require(id);
+        if (p.getCoordinates() == null) {
+            p.setCoordinates(new Coordinates());
         }
-        if (p.getCoordinates() == null) p.setCoordinates(new Coordinates());
         model.addAttribute("person", p);
-        model.addAttribute("colors", Color.values());
-        model.addAttribute("countries", Country.values());
+        populateReferenceData(model);
         return "persons/form";
     }
 
+    /**
+     * Обновление существующей записи по id.
+     */
     @PostMapping("/{id}")
     public String update(@PathVariable Integer id,
                          @Valid @ModelAttribute("person") Person person,
                          BindingResult bindingResult,
                          Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("colors", Color.values());
-            model.addAttribute("countries", Country.values());
+            populateReferenceData(model);
             return "persons/form";
         }
         try {
@@ -123,12 +131,14 @@ public class PersonController {
             return "redirect:/persons";
         } catch (Exception ex) {
             bindingResult.reject("updateError", ex.getMessage());
-            model.addAttribute("colors", Color.values());
-            model.addAttribute("countries", Country.values());
+            populateReferenceData(model);
             return "persons/form";
         }
     }
 
+    /**
+     * Удаление через кнопку на карточке.
+     */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Integer id) {
         service.delete(id);

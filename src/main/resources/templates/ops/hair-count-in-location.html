@@ -1,13 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"/><title>Количество по цвету волос</title></head>
+<head>
+  <meta charset="UTF-8"/><title>Количество по цвету волос</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 
-<h2>Количество по цвету волос в локации</h2>
-<p>hairColor: <span th:text="${hairColor}"></span>,
-  locationId: <span th:text="${locationId}"></span></p>
-<p>count: <b th:text="${count}"></b></p>
+<div class="container">
+  <div class="card">
+    <div class="page-header">
+      <h2>Количество по цвету волос</h2>
+      <a class="btn ghost" th:href="@{/ops}">Назад к операциям</a>
+    </div>
+    <dl class="details" style="margin: 0;">
+      <div>
+        <dt>hairColor</dt>
+        <dd th:text="${hairColor}"></dd>
+      </div>
+      <div>
+        <dt>locationId</dt>
+        <dd th:text="${locationId != null ? locationId : '(не задано)'}"></dd>
+      </div>
+      <div>
+        <dt>count</dt>
+        <dd><b th:text="${count}"></b></dd>
+      </div>
+    </dl>
+  </div>
+</div>
 
 <div th:replace="~{fragments/nav :: ws}"></div>
 </body>

@@ -7,24 +7,59 @@
 <body>
 <div th:replace="fragments/nav :: nav"></div>
 
-<h2>Просмотр</h2>
-<div th:if="${error}" class="error" th:text="${error}"></div>
-<div th:if="${person}">
-  <p><b>ID:</b> <span th:text="${person.id}"></span></p>
-  <p><b>name:</b> <span th:text="${person.name}"></span></p>
-  <p><b>height:</b> <span th:text="${person.height}"></span></p>
-  <p><b>eyeColor:</b> <span th:text="${person.eyeColor}"></span></p>
-  <p><b>hairColor:</b> <span th:text="${person.hairColor}"></span></p>
-  <p><b>nationality:</b> <span th:text="${person.nationality}"></span></p>
-  <p><b>birthday:</b> <span th:text="${person.birthday != null ? #dates.format(person.birthday,'yyyy-MM-dd') : ''}"></span></p>
-  <p><b>creationDate:</b> <span th:text="${person.creationDate != null ? #temporals.format(person.creationDate,'yyyy-MM-dd HH:mm') : ''}"></span></p>
-  <p><b>coordinates:</b>
-    <span th:text="${person.coordinates != null ? ('x=' + person.coordinates.x + '; y=' + person.coordinates.y) : ''}"></span>
-  </p>
-  <p><b>location:</b>
-    <span th:text="${person.location != null ? ('x=' + person.location.x + '; y=' + person.location.y + '; z=' + person.location.z) : '(нет)'}"></span>
-  </p>
-  <a th:href="@{|/persons/${person.id}/edit|}">Изменить</a>
+<div class="container" th:if="${person}">
+  <div class="card">
+    <div class="page-header">
+      <h2>Просмотр</h2>
+      <a class="btn ghost" th:href="@{/persons}">Назад к списку</a>
+    </div>
+    <dl class="details">
+      <div>
+        <dt>ID</dt>
+        <dd th:text="${person.id}"></dd>
+      </div>
+      <div>
+        <dt>name</dt>
+        <dd th:text="${person.name}"></dd>
+      </div>
+      <div>
+        <dt>height</dt>
+        <dd th:text="${person.height}"></dd>
+      </div>
+      <div>
+        <dt>eyeColor</dt>
+        <dd th:text="${person.eyeColor}"></dd>
+      </div>
+      <div>
+        <dt>hairColor</dt>
+        <dd th:text="${person.hairColor}"></dd>
+      </div>
+      <div>
+        <dt>nationality</dt>
+        <dd th:text="${person.nationality}"></dd>
+      </div>
+      <div>
+        <dt>birthday</dt>
+        <dd th:text="${person.birthday != null ? #dates.format(person.birthday,'yyyy-MM-dd') : '(не задано)'}"></dd>
+      </div>
+      <div>
+        <dt>creationDate</dt>
+        <dd th:text="${person.creationDate != null ? #temporals.format(person.creationDate,'yyyy-MM-dd HH:mm') : ''}"></dd>
+      </div>
+      <div>
+        <dt>coordinates</dt>
+        <dd th:text="${person.coordinates != null ? ('x=' + person.coordinates.x + '; y=' + person.coordinates.y) : ''}"></dd>
+      </div>
+      <div>
+        <dt>location</dt>
+        <dd th:text="${person.location != null ? ('x=' + person.location.x + '; y=' + person.location.y + '; z=' + person.location.z) : '(нет)'}"></dd>
+      </div>
+    </dl>
+
+    <div class="actions" style="margin-top: 24px;">
+      <a class="btn" th:href="@{|/persons/${person.id}/edit|}">Изменить</a>
+    </div>
+  </div>
 </div>
 
 <div th:replace="fragments/nav :: ws"></div>

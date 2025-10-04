@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${title}">Ошибка 500</title>
+    <title th:text="${title}">Не найдено</title>
     <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href="@{/style/main.css}">
 </head>
 <body class="error-page">
 <div class="error-card">
-    <h1>500</h1>
-    <h2 th:text="${title}">Внутренняя ошибка</h2>
-    <p th:text="${message}">Что-то пошло не так. Вернуться позже.</p>
+    <h1>404</h1>
+    <h2 th:text="${title}">Страница не найдена</h2>
+    <p th:text="${message}">Мы не нашли запрошенный ресурс.</p>
 
     <details class="error-details" th:if="${detail}">
         <summary>Подробнее</summary>
@@ -19,7 +19,6 @@
     <div class="error-meta">
         <span th:if="${timestamp}" th:text="${#temporals.format(timestamp, 'dd.MM.yyyy HH:mm:ss')}"></span>
         <span th:if="${path}" th:text="${path}"></span>
-        <span th:if="${errorId}" th:text="|ID ошибки: ${errorId}|"></span>
     </div>
 
     <a class="btn" th:href="@{/persons}">На главную</a>

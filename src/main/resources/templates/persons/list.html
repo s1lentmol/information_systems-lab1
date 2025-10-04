@@ -10,13 +10,15 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 
 <div class="container">
-  <h2>Список</h2>
+  <div class="page-header">
+    <h2>Список</h2>
+  </div>
 
   <div class="card">
     <!-- сообщение об ошибке фильтра -->
     <div class="alert error" th:if="${filterError}" th:text="${filterError}"></div>
 
-    <form method="get" th:action="@{/persons}">
+    <form class="form" method="get" th:action="@{/persons}">
       <div class="row">
         <div class="field">
           <label>Поле фильтра</label>
