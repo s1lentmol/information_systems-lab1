@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/persons")
@@ -23,17 +24,13 @@ public class PersonController {
         this.publisher = publisher;
     }
 
-    /**
-     * Общие справочники (цвета, страны) для форм.
-     */
+
     private void populateReferenceData(Model model) {
         model.addAttribute("colors", Color.values());
         model.addAttribute("countries", Country.values());
     }
 
-    /**
-     * Список с пагинацией, фильтрами и сортировкой.
-     */
+
     @GetMapping
     public String list(@RequestParam(required = false) String filterField,
                        @RequestParam(required = false) String filterValue,
@@ -63,20 +60,20 @@ public class PersonController {
 
     @GetMapping("/new")
     public String createForm(Model model) {
-        Person p = new Person();
-        p.setCoordinates(new Coordinates());
-        model.addAttribute("person", p);
+        if (!model.containsAttribute("person")) {
+            Person p = new Person();
+            p.setCoordinates(new Coordinates());
+            model.addAttribute("person", p);
+        }
         populateReferenceData(model);
         return "persons/form";
     }
 
-    /**
-     * Обработка отправки формы создания.
-     */
     @PostMapping
     public String create(@Valid @ModelAttribute("person") Person person,
                          BindingResult bindingResult,
-                         Model model) {
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             populateReferenceData(model);
             return "persons/form";
@@ -84,7 +81,11 @@ public class PersonController {
         try {
             service.create(person);
             publisher.broadcastChange();
+
+            redirectAttributes.addFlashAttribute("successMessage", "объект успешно сохранен");
+
             return "redirect:/persons";
+
         } catch (Exception ex) {
             bindingResult.reject("createError", ex.getMessage());
             populateReferenceData(model);
@@ -99,9 +100,6 @@ public class PersonController {
         return "persons/view";
     }
 
-    /**
-     * Форма редактирования уже существующего пользователя.
-     */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model) {
         Person p = service.require(id);
@@ -113,14 +111,12 @@ public class PersonController {
         return "persons/form";
     }
 
-    /**
-     * Обновление существующей записи по id.
-     */
     @PostMapping("/{id}")
     public String update(@PathVariable Integer id,
                          @Valid @ModelAttribute("person") Person person,
                          BindingResult bindingResult,
-                         Model model) {
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             populateReferenceData(model);
             return "persons/form";
@@ -128,7 +124,11 @@ public class PersonController {
         try {
             service.update(id, person);
             publisher.broadcastChange();
+
+            redirectAttributes.addFlashAttribute("successMessage", "объект успешно сохранен");
+
             return "redirect:/persons";
+
         } catch (Exception ex) {
             bindingResult.reject("updateError", ex.getMessage());
             populateReferenceData(model);
@@ -136,9 +136,6 @@ public class PersonController {
         }
     }
 
-    /**
-     * Удаление через кнопку на карточке.
-     */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Integer id) {
         service.delete(id);

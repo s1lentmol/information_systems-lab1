@@ -13,6 +13,8 @@
   <div class="card">
     <h2 th:text="${person != null && person.id != null ? 'Изменить' : 'Создать'}"></h2>
 
+    <div class="alert success" th:if="${successMessage}" th:text="${successMessage}"></div>
+
     <form class="form" th:action="${person == null || person.id == null} ? @{/persons} : @{'/persons/' + ${person.id}}"
           method="post" th:object="${person}">
 
@@ -99,6 +101,18 @@
     </form>
   </div>
 </div>
+
+<script th:inline="javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form.form');
+    if (!form) {
+      return;
+    }
+    form.addEventListener('submit', () => {
+      window.personFormSubmitting = true;
+    }, { once: false });
+  });
+</script>
 
 <div th:replace="~{fragments/nav :: ws}"></div>
 </body>

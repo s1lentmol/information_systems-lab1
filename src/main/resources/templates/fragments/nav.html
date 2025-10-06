@@ -18,10 +18,18 @@
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script>
+    window.personFormSubmitting = false;
+
     const sock = new SockJS('/ws');
     const stomp = Stomp.over(sock);
     stomp.connect({}, () => {
-      stomp.subscribe('/topic/persons', () => location.reload());
+      stomp.subscribe('/topic/persons', () => {
+        if (window.personFormSubmitting) {
+          window.personFormSubmitting = false;
+          return;
+        }
+        location.reload();
+      });
     });
   </script>
 </div>

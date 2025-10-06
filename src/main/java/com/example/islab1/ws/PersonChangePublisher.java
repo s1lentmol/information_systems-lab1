@@ -8,7 +8,6 @@ public class PersonChangePublisher {
     private final SimpMessagingTemplate template;
     public PersonChangePublisher(SimpMessagingTemplate template) { this.template = template; }
     public void broadcastChange() {
-        // Клиенты подпишутся на /topic/persons и просто перезагрузят таблицу
         template.convertAndSend("/topic/persons", "changed");
     }
 }

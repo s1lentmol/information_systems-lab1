@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -25,9 +25,10 @@ public class Person {
     @JoinColumn(name = "coordinates_id", nullable = false)
     private Coordinates coordinates;
 
-    @CreationTimestamp
     @Column(nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime creationDate;
+
+    private static final ZoneId MOSCOW_ZONE = ZoneId.of("Europe/Moscow");
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -72,4 +73,25 @@ public class Person {
     public void setBirthday(Date birthday) { this.birthday = birthday; }
     public Country getNationality() { return nationality; }
     public void setNationality(Country nationality) { this.nationality = nationality; }
+
+    @PrePersist
+    public void prePersist() {
+        if (creationDate == null) {
+            creationDate = ZonedDateTime.now(MOSCOW_ZONE);
+        } else {
+            creationDate = creationDate.withZoneSameInstant(MOSCOW_ZONE);
+        }
+    }
+
+    @PostLoad
+    public void postLoad() {
+        if (creationDate != null) {
+            creationDate = creationDate.withZoneSameInstant(MOSCOW_ZONE);
+        }
+    }
+
+    @Transient
+    public ZonedDateTime getCreationDateMoscow() {
+        return creationDate == null ? null : creationDate.withZoneSameInstant(MOSCOW_ZONE);
+    }
 }

@@ -15,6 +15,7 @@
   </div>
 
   <div class="card">
+    <div class="alert success" th:if="${successMessage}" th:text="${successMessage}"></div>
     <!-- сообщение об ошибке фильтра -->
     <div class="alert error" th:if="${filterError}" th:text="${filterError}"></div>
 
@@ -25,21 +26,20 @@
           <select name="filterField">
             <option value="">без фильтра</option>
             <option value="name" th:selected="${filterField=='name'}">name</option>
-            <option value="eyeColor" th:selected="${filterField=='eyeColor'}">eyeColor</option>
-            <option value="hairColor" th:selected="${filterField=='hairColor'}">hairColor</option>
-            <option value="nationality" th:selected="${filterField=='nationality'}">nationality</option>
+            <option value="eyeColor" th:selected="${filterField=='eyeColor'}"
+                    th:attr="data-enum=${#strings.arrayJoin(colors, ', ')}">eyeColor</option>
+            <option value="hairColor" th:selected="${filterField=='hairColor'}"
+                    th:attr="data-enum=${#strings.arrayJoin(colors, ', ')}">hairColor</option>
+            <option value="nationality" th:selected="${filterField=='nationality'}"
+                    th:attr="data-enum=${#strings.arrayJoin(countries, ', ')}">nationality</option>
           </select>
         </div>
 
         <div class="field">
           <label>Значение</label>
-          <input type="text" name="filterValue" th:value="${filterValue}" placeholder="точное совпадение"/>
-          <div class="muted" th:if="${filterField=='eyeColor' or filterField=='hairColor'}">
-            Доступно: BLUE, BLACK, GREEN, WHITE
-          </div>
-          <div class="muted" th:if="${filterField=='nationality'}">
-            Доступно: USA, VATICAN, NORTH_KOREA
-          </div>
+          <input id="filterValueText" type="text" name="filterValue"
+                 th:value="${filterValue}" placeholder="точное совпадение"/>
+          <select id="filterValueSelect" class="hidden"></select>
         </div>
 
         <div class="field">
@@ -86,7 +86,7 @@
         <td th:text="${p.nationality}"></td>
         <td th:text="${p.coordinates != null ? ('x=' + p.coordinates.x + '; y=' + p.coordinates.y) : ''}"></td>
         <td th:text="${p.location != null ? ('x=' + p.location.x + '; y=' + p.location.y + '; z=' + p.location.z) : ''}"></td>
-        <td th:text="${p.creationDate != null ? #temporals.format(p.creationDate, 'yyyy-MM-dd HH:mm') : ''}"></td>
+        <td th:text="${p.creationDateMoscow != null ? #temporals.format(p.creationDateMoscow, 'yyyy-MM-dd HH:mm') : ''}"></td>
         <td>
           <div class="actions">
             <a class="btn ghost" th:href="@{|/persons/${p.id}|}">Открыть</a>
@@ -114,6 +114,85 @@
     </div>
   </div>
 </div>
+
+<script th:inline="javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterFieldEl = document.querySelector('select[name="filterField"]');
+    const textInput = document.getElementById('filterValueText');
+    const enumSelect = document.getElementById('filterValueSelect');
+
+    const initialField = /*[[${filterField}]]*/ null;
+    const initialValue = /*[[${filterValue}]]*/ null;
+
+    const enumOptions = {};
+    Array.from(filterFieldEl.options).forEach(option => {
+      const enumPayload = option.getAttribute('data-enum');
+      if (option.value && enumPayload) {
+        enumOptions[option.value] = enumPayload.split(',').map(item => item.trim()).filter(Boolean);
+      }
+    });
+
+    const getCurrentValue = () => {
+      if (enumSelect.hasAttribute('name')) {
+        return enumSelect.value;
+      }
+      if (textInput.hasAttribute('name')) {
+        return textInput.value;
+      }
+      return '';
+    };
+
+    const applyFieldMode = () => {
+      const field = filterFieldEl.value;
+      const options = enumOptions[field];
+      const currentValue = getCurrentValue();
+
+      if (options) {
+        enumSelect.innerHTML = '';
+        options.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item;
+          option.textContent = item;
+          enumSelect.appendChild(option);
+        });
+
+        const valueToApply = options.includes(currentValue) ? currentValue : options[0];
+        enumSelect.value = valueToApply;
+
+        enumSelect.classList.remove('hidden');
+        enumSelect.setAttribute('name', 'filterValue');
+        textInput.classList.add('hidden');
+        textInput.removeAttribute('name');
+      } else {
+        textInput.value = currentValue;
+        textInput.classList.remove('hidden');
+        textInput.setAttribute('name', 'filterValue');
+        enumSelect.classList.add('hidden');
+        enumSelect.removeAttribute('name');
+      }
+    };
+
+    if (initialField) {
+      filterFieldEl.value = initialField;
+    }
+
+    if (initialValue) {
+      textInput.value = initialValue;
+      enumSelect.value = initialValue;
+    }
+
+    applyFieldMode();
+
+    if (enumSelect.hasAttribute('name') && initialValue) {
+      const options = enumOptions[filterFieldEl.value] || [];
+      if (options.includes(initialValue)) {
+        enumSelect.value = initialValue;
+      }
+    }
+
+    filterFieldEl.addEventListener('change', applyFieldMode);
+  });
+</script>
 
 <div th:replace="~{fragments/nav :: ws}"></div>
 </body>
