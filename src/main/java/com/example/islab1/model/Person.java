@@ -1,9 +1,11 @@
 package com.example.islab1.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZoneId;
@@ -13,11 +15,17 @@ import java.util.Date;
 @Entity
 @Table(name = "persons")
 public class Person {
+    private static final ZoneId MOSCOW_ZONE = ZoneId.of("Europe/Moscow");
+    private static final int NAME_MAX_LENGTH = 255;
+    private static final int HEIGHT_MAX_VALUE = 1_000_000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // БД генерит id
     private Integer id;
 
-    @NotBlank
+    @NotBlank(message = "{person.name.notBlank}")
+    @Size(max = NAME_MAX_LENGTH, message = "{person.name.size}")
+    @Column(nullable = false, length = NAME_MAX_LENGTH)
     private String name;
 
     @NotNull
@@ -27,8 +35,6 @@ public class Person {
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime creationDate;
-
-    private static final ZoneId MOSCOW_ZONE = ZoneId.of("Europe/Moscow");
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -42,7 +48,8 @@ public class Person {
     @JoinColumn(name = "location_id")
     private Location location; // может быть null
 
-    @Min(1)
+    @Min(value = 1, message = "{person.height.min}")
+    @Max(value = HEIGHT_MAX_VALUE, message = "{person.height.max}")
     private int height;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

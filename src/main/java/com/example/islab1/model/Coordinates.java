@@ -1,6 +1,8 @@
 package com.example.islab1.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -10,9 +12,13 @@ public class Coordinates {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @DecimalMin(value = "-1000000", message = "{coordinates.x.range}")
+    @DecimalMax(value = "1000000", message = "{coordinates.x.range}")
     private float x;
 
-    @NotNull
+    @NotNull(message = "{coordinates.y.notNull}")
+    @DecimalMin(value = "-1000000", message = "{coordinates.y.range}")
+    @DecimalMax(value = "1000000", message = "{coordinates.y.range}")
     private Float y;
 
     public Coordinates() {}

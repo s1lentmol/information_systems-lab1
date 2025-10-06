@@ -1,9 +1,12 @@
 package com.example.islab1.web;
 
 import com.example.islab1.model.*;
-import com.example.islab1.ws.PersonChangePublisher;
 import com.example.islab1.service.PersonService;
+import com.example.islab1.ws.PersonChangePublisher;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ public class PersonController {
 
     private final PersonService service;
     private final PersonChangePublisher publisher;
+    private static final Logger log = LoggerFactory.getLogger(PersonController.class);
 
     public PersonController(PersonService service, PersonChangePublisher publisher) {
         this.service = service;
@@ -86,8 +90,14 @@ public class PersonController {
 
             return "redirect:/persons";
 
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("Failed to create person: constraint violation", ex);
+            bindingResult.reject("createError", "Не удалось сохранить объект: данные противоречат ограничениям.");
+            populateReferenceData(model);
+            return "persons/form";
         } catch (Exception ex) {
-            bindingResult.reject("createError", ex.getMessage());
+            log.error("Unexpected error while creating person", ex);
+            bindingResult.reject("createError", "Произошла ошибка при сохранении. Попробуйте повторить позже.");
             populateReferenceData(model);
             return "persons/form";
         }
@@ -129,8 +139,14 @@ public class PersonController {
 
             return "redirect:/persons";
 
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("Failed to update person {}: constraint violation", id, ex);
+            bindingResult.reject("updateError", "Не удалось сохранить объект: данные противоречат ограничениям.");
+            populateReferenceData(model);
+            return "persons/form";
         } catch (Exception ex) {
-            bindingResult.reject("updateError", ex.getMessage());
+            log.error("Unexpected error while updating person {}", id, ex);
+            bindingResult.reject("updateError", "Произошла ошибка при сохранении. Попробуйте повторить позже.");
             populateReferenceData(model);
             return "persons/form";
         }
