@@ -28,7 +28,6 @@ public class PersonController {
         this.publisher = publisher;
     }
 
-
     private void populateReferenceData(Model model) {
         model.addAttribute("colors", Color.values());
         model.addAttribute("countries", Country.values());

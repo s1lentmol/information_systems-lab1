@@ -48,7 +48,7 @@ public class Person {
     @JoinColumn(name = "location_id")
     private Location location; // может быть null
 
-    @Min(value = 1, message = "{person.height.min}")
+    @Min(value = 1, message = "{person.height`.min}")
     @Max(value = HEIGHT_MAX_VALUE, message = "{person.height.max}")
     private int height;
 
