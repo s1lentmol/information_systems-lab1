@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><title>Просмотр</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container" th:if="${person}">
+  <div class="card">
+    <div class="page-header">
+      <h2>Просмотр</h2>
+      <a class="btn ghost" th:href="@{/persons}">Назад к списку</a>
+    </div>
+    <dl class="details">
+      <div>
+        <dt>ID</dt>
+        <dd th:text="${person.id}"></dd>
+      </div>
+      <div>
+        <dt>name</dt>
+        <dd th:text="${person.name}"></dd>
+      </div>
+      <div>
+        <dt>height</dt>
+        <dd th:text="${person.height}"></dd>
+      </div>
+      <div>
+        <dt>eyeColor</dt>
+        <dd th:text="${person.eyeColor}"></dd>
+      </div>
+      <div>
+        <dt>hairColor</dt>
+        <dd th:text="${person.hairColor}"></dd>
+      </div>
+      <div>
+        <dt>nationality</dt>
+        <dd th:text="${person.nationality}"></dd>
+      </div>
+      <div>
+        <dt>birthday</dt>
+        <dd th:text="${person.birthday != null ? #dates.format(person.birthday,'yyyy-MM-dd') : '(не задано)'}"></dd>
+      </div>
+      <div>
+        <dt>creationDate</dt>
+        <dd th:text="${person.creationDateMoscow != null ? #temporals.format(person.creationDateMoscow,'yyyy-MM-dd HH:mm') : ''}"></dd>
+      </div>
+      <div>
+        <dt>coordinates</dt>
+        <dd th:text="${person.coordinates != null ? ('x=' + person.coordinates.x + '; y=' + person.coordinates.y) : ''}"></dd>
+      </div>
+      <div>
+        <dt>location</dt>
+        <dd th:text="${person.location != null ? ('x=' + person.location.x + '; y=' + person.location.y + '; z=' + person.location.z) : '(нет)'}"></dd>
+      </div>
+    </dl>
+
+    <div class="actions" style="margin-top: 24px;">
+      <a class="btn" th:href="@{|/persons/${person.id}/edit|}">Изменить</a>
+    </div>
+  </div>
+</div>
+
+<div th:replace="fragments/nav :: ws"></div>
+</body>
+</html>

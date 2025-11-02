@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Некорректный запрос</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href="@{/style/main.css}">
+</head>
+<body class="error-page">
+<div class="error-card">
+    <h1>400</h1>
+    <h2 th:text="${title}">Некорректный запрос</h2>
+    <p th:text="${message}">Проверьте введённые данные.</p>
+
+    <details class="error-details" th:if="${detail}">
+        <summary>Подробнее</summary>
+        <p th:text="${detail}"></p>
+    </details>
+
+    <div class="error-meta">
+        <span th:if="${timestamp}" th:text="${#temporals.format(timestamp, 'dd.MM.yyyy HH:mm:ss')}"></span>
+        <span th:if="${path}" th:text="${path}"></span>
+    </div>
+
+    <a class="btn" th:href="@{/persons}">Вернуться к списку</a>
+</div>
+</body>
+</html>

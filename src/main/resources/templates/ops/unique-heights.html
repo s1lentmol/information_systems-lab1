@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/><title>Уникальные высоты</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+    <div class="card">
+        <div class="page-header">
+            <h2>Уникальные значения height</h2>
+            <a class="btn ghost" th:href="@{/ops}">Назад к операциям</a>
+        </div>
+
+        <ul class="list-chips">
+            <li th:each="h: ${heights}" th:text="${h}"></li>
+        </ul>
+    </div>
+</div>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><title>Результаты</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+  <div class="card">
+    <div class="page-header">
+      <h2>Рост выше порога</h2>
+      <a class="btn ghost" th:href="@{/ops}">Назад к операциям</a>
+    </div>
+
+    <table>
+      <thead>
+      <tr><th>ID</th><th>Name</th><th>Height</th></tr>
+      </thead>
+      <tbody>
+      <tr th:if="${results.isEmpty()}">
+        <td colspan="3" class="muted">Ничего не найдено</td>
+      </tr>
+      <tr th:each="p: ${results}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.height}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

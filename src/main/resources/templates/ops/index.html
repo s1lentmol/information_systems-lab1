@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Операции</title>
+  <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+  <div class="page-header">
+    <h2>Операции</h2>
+  </div>
+
+  <div th:if="${message}" class="alert success" th:text="${message}" style="margin-bottom: 24px;"></div>
+
+  <div class="ops-grid">
+    <div class="ops-card">
+      <h3>Удалить по nationality</h3>
+      <p class="muted">Удаляет всех людей, относящихся к выбранной стране.</p>
+      <form method="post" th:action="@{/ops/delete-by-nationality}" class="form-section">
+        <select name="nationality">
+          <option th:each="n: ${countries}" th:value="${n}" th:text="${n}"></option>
+        </select>
+        <button type="submit" class="btn danger">Удалить</button>
+      </form>
+    </div>
+
+    <div class="ops-card">
+      <h3>Рост выше X</h3>
+      <p class="muted">Список людей, чей height превышает указанный порог.</p>
+      <form method="get" th:action="@{/ops/height-greater}" class="form-section">
+        <input type="number" name="height" min="1" value="170"/>
+        <button type="submit" class="btn">Найти</button>
+      </form>
+    </div>
+
+    <div class="ops-card">
+      <h3>Уникальные height</h3>
+      <p class="muted">Показывает отсортированный список уникальных значений роста.</p>
+      <a class="btn ghost" th:href="@{/ops/unique-heights}">Показать</a>
+    </div>
+
+    <div class="ops-card">
+      <h3>Доля по hairColor</h3>
+      <p class="muted">Вычисляет процент людей с выбранным цветом волос.</p>
+      <form method="get" th:action="@{/ops/hair-share}" class="form-section">
+        <select name="hairColor">
+          <option th:each="c : ${colors}" th:value="${c}" th:text="${c}"></option>
+        </select>
+        <button type="submit" class="btn">Посчитать (%)</button>
+      </form>
+    </div>
+
+    <div class="ops-card">
+      <h3>Количество в локации</h3>
+      <p class="muted">Считает людей с цветом волос в заданной Location (ID).</p>
+      <form method="get" th:action="@{/ops/hair-count-in-location}" class="form-section">
+        <select name="hairColor">
+          <option th:each="c : ${colors}" th:value="${c}" th:text="${c}"></option>
+        </select>
+        <input type="number" name="locationId" placeholder="locationId (опционально)"/>
+        <button type="submit" class="btn">Посчитать</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>

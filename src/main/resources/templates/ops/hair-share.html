@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/><title>Доля по волосам</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/main.css" th:href = "@{/style/main.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+    <div class="card">
+        <div class="page-header">
+            <h2>Доля по волосам</h2>
+            <a class="btn ghost" th:href="@{/ops}">Назад к операциям</a>
+        </div>
+        <p><span class="muted">hairColor:</span> <b th:text="${hairColor}"></b></p>
+        <p><span class="muted">Доля:</span> <b th:text="${#numbers.formatDecimal(share,1,2)} + ' %'"></b></p>
+    </div>
+</div>
+
+<div th:replace="~{fragments/nav :: ws}"></div>
+</body>
+</html>
